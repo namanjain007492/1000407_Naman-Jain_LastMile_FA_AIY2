@@ -29,7 +29,6 @@ st.markdown("""
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
         background: #050505; z-index: 999999;
         display: flex; flex-direction: column; justify-content: center; align-items: center;
-        /* Fades out after 5 seconds */
         animation: fadeOut 0.8s ease-in-out 5s forwards;
     }
     .logo-glow {
@@ -37,15 +36,21 @@ st.markdown("""
         text-shadow: 0px 0px 20px rgba(227, 24, 55, 0.8);
         letter-spacing: 4px; margin-bottom: 30px;
     }
+    
+    /* Dedicated Animation Container */
+    .animation-container {
+        width: 100%; position: relative; height: 120px; overflow: hidden;
+    }
     .road-3d {
         width: 100%; height: 10px; background: #222; border-top: 2px dashed #444; 
-        position: relative; overflow: hidden; margin-top: 20px;
+        position: absolute; bottom: 0;
     }
     .truck-3d {
-        font-size: 6rem; position: absolute; bottom: -5px; left: -20%;
-        /* 5-Second Drive Animation */
+        font-size: 6rem; position: absolute; bottom: 5px; left: -20%;
         animation: driveSmooth 5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
         filter: drop-shadow(5px 15px 10px rgba(227, 24, 55, 0.4));
+        z-index: 10;
+        line-height: 1;
     }
     
     @keyframes driveSmooth { 
@@ -87,11 +92,13 @@ if 'booted' not in st.session_state:
         st.markdown("""
             <div class="splash-screen">
                 <div class="logo-glow">DELHIVERY<span style="color:#E31837;">//</span>AI</div>
-                <div class="road-3d"><div class="truck-3d">🚚</div></div>
+                <div class="animation-container">
+                    <div class="truck-3d">🚚</div>
+                    <div class="road-3d"></div>
+                </div>
                 <div style="margin-top:40px; color:#888; font-family:monospace; font-size: 1.2rem; font-weight: 600; letter-spacing: 2px;">INITIALIZING NEURAL TELEMETRY...</div>
             </div>
         """, unsafe_allow_html=True)
-    # Pause Python for 5.5 seconds so the 5-second CSS animation finishes beautifully
     time.sleep(5.5) 
     splash.empty()
     st.session_state.booted = True
