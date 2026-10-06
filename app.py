@@ -24,29 +24,38 @@ st.markdown("""
         font-family: 'Inter', sans-serif;
     }
     
-    /* Splash Screen & 3D Truck Animation */
+    /* 5-Second Splash Screen */
     .splash-screen {
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-        background: #050505; z-index: 99999;
+        background: #050505; z-index: 999999;
         display: flex; flex-direction: column; justify-content: center; align-items: center;
-        animation: fadeOut 0.5s ease-in 4s forwards;
+        /* Fades out after 5 seconds */
+        animation: fadeOut 0.8s ease-in-out 5s forwards;
     }
     .logo-glow {
         font-size: 4rem; font-weight: 900; color: #fff;
         text-shadow: 0px 0px 20px rgba(227, 24, 55, 0.8);
-        letter-spacing: 4px; margin-bottom: 20px;
+        letter-spacing: 4px; margin-bottom: 30px;
     }
     .road-3d {
-        width: 100%; height: 8px; background: #222; border-top: 2px dashed #444; 
-        position: relative; overflow: hidden;
+        width: 100%; height: 10px; background: #222; border-top: 2px dashed #444; 
+        position: relative; overflow: hidden; margin-top: 20px;
     }
     .truck-3d {
-        font-size: 5rem; position: absolute; bottom: 0; left: -20%;
-        animation: driveSmooth 4s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        font-size: 6rem; position: absolute; bottom: -5px; left: -20%;
+        /* 5-Second Drive Animation */
+        animation: driveSmooth 5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
         filter: drop-shadow(5px 15px 10px rgba(227, 24, 55, 0.4));
     }
-    @keyframes driveSmooth { 0% { left: -20%; transform: scale(0.9); } 50% { left: 45%; transform: scale(1.1); } 100% { left: 120%; transform: scale(0.9); } }
-    @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+    
+    @keyframes driveSmooth { 
+        0% { left: -20%; transform: scale(0.9); } 
+        50% { left: 45%; transform: scale(1.2); } 
+        100% { left: 120%; transform: scale(0.9); } 
+    }
+    @keyframes fadeOut { 
+        to { opacity: 0; visibility: hidden; z-index: -1; } 
+    }
 
     /* Glassmorphism KPI Cards */
     div[data-testid="metric-container"] {
@@ -79,10 +88,11 @@ if 'booted' not in st.session_state:
             <div class="splash-screen">
                 <div class="logo-glow">DELHIVERY<span style="color:#E31837;">//</span>AI</div>
                 <div class="road-3d"><div class="truck-3d">🚚</div></div>
-                <div style="margin-top:20px; color:#666; font-family:monospace;">INITIALIZING NEURAL TELEMETRY...</div>
+                <div style="margin-top:40px; color:#888; font-family:monospace; font-size: 1.2rem; font-weight: 600; letter-spacing: 2px;">INITIALIZING NEURAL TELEMETRY...</div>
             </div>
         """, unsafe_allow_html=True)
-    time.sleep(3.8) 
+    # Pause Python for 5.5 seconds so the 5-second CSS animation finishes beautifully
+    time.sleep(5.5) 
     splash.empty()
     st.session_state.booted = True
 
