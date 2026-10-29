@@ -11,6 +11,10 @@ This system features a custom glassmorphism UI, a cinematic 3D startup sequence,
 
 ---
 
+Streamlit link: [Click here to access the link](https://1000407naman-jainlastmile.streamlit.app/)
+
+Storyboard Link:  [Click here to access the link](https://canva.link/19mao63q51xdjxm)
+
 ## ⚡ CORE FEATURES
 
 ### 🌐 3D Geospatial & Visual Intelligence
@@ -79,4 +83,7 @@ The dashboard is divided into four main tabs, housing 12 distinct analytical eng
 ---
 
 **SYSTEM ARCHITECT:** Naman Jain 
+**REGISTRATION NUMBER:** 1000407
+**MENTOR:** Ms. Syed Ali Beema
+**SCHOOL NAME:** Jain Vidyalaya IB World School
 **FRAMEWORK:** Streamlit | Plotly | Pandas | Custom CSS
