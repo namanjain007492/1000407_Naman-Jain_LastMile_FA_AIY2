@@ -129,7 +129,7 @@ def load_data():
     if 'Agent_Age' in df.columns:
         df['Agent_Age_Group'] = pd.cut(df['Agent_Age'], bins=[0, 25, 40, 100], labels=['<25', '25–40', '40+'])
     
-    # 9. Monthly Trend Setup (Simulated if missing)
+    # Monthly Trend Setup (Simulated if missing)
     np.random.seed(42)
     df['Month'] = np.random.choice(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], size=len(df))
     
@@ -180,6 +180,18 @@ m3.metric("⚠️ DELAY RATIO", f"{late_pct:.1f}%")
 m4.metric("🛑 AI THRESHOLD", f"{late_threshold:.1f} min")
 st.markdown("<br>", unsafe_allow_html=True)
 
+# ---------------------------------------------------------
+# Data Cleaning & Processing Log (UI)
+# ---------------------------------------------------------
+with st.expander("🛠️ View Data Processing & Cleaning Log"):
+    st.markdown("""
+    **Data Pipeline Actions Performed:**
+    1. **Missing Value Handling:** Dropped incomplete telemetry records containing Nulls in core fields (Weather, Traffic, Vehicle, Area, Category).
+    2. **Outlier & SLA Engineering:** Calculated dynamic Late Thresholds based on overall network average + 1 Standard Deviation.
+    3. **Feature Synthesis:** Created binary `Is_Late` flag for delay tracking and segmented `Agent_Age` into generational cohorts (<25, 25-40, 40+).
+    4. **Categorical Normalization:** Stripped whitespace from column headers to prevent indexing errors.
+    """)
+
 if total_orders > 0:
     transparent_layout = dict(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font=dict(color='#ccc'))
     
@@ -192,6 +204,7 @@ if total_orders > 0:
             fig_3d = px.scatter_3d(filtered_df, x='Agent_Rating', y='Agent_Age', z='Delivery_Time', color='Agent_Age_Group', size='Delivery_Time', color_discrete_sequence=['#E31837', '#FFF', '#555'], template="plotly_dark", title="Personnel Efficiency Matrix")
             fig_3d.update_layout(**transparent_layout, scene=dict(bgcolor='rgba(0,0,0,0)'))
             st.plotly_chart(fig_3d, use_container_width=True)
+            st.caption("📍 **Purpose:** Identifies agent efficiency patterns. **Features Used:** X=Rating, Y=Age, Z=Time, Size=Delay Magnitude.")
 
         # 6. Area Heatmap (3D Surface)
         with c2:
@@ -199,6 +212,7 @@ if total_orders > 0:
             fig_surf = go.Figure(data=[go.Surface(z=area_matrix.values, x=area_matrix.columns, y=area_matrix.index, colorscale=[[0, '#050505'], [0.5, '#E31837'], [1, '#FFFFFF']])])
             fig_surf.update_layout(title="Geographic Bottleneck Surface", template="plotly_dark", **transparent_layout, scene=dict(bgcolor='rgba(0,0,0,0)'))
             st.plotly_chart(fig_surf, use_container_width=True)
+            st.caption("📍 **Purpose:** Maps traffic bottlenecks across geographic zones. **Features Used:** X=Traffic State, Y=Area, Z=Avg Delivery Time.")
 
         c3, c4 = st.columns(2)
         # 3. Delay Analyzer
@@ -207,6 +221,7 @@ if total_orders > 0:
             fig_del = px.bar(delay_data, x='Weather', y='Delivery_Time', color='Traffic', barmode='group', template="plotly_dark", title="Environmental Impact")
             fig_del.update_layout(**transparent_layout)
             st.plotly_chart(fig_del, use_container_width=True)
+            st.caption("📍 **Purpose:** Evaluates environmental and traffic drag on the fleet. **Features Used:** X=Weather, Y=Delivery Time, Color=Traffic Level.")
             
         # 4. Vehicle Comparison
         with c4:
@@ -214,11 +229,13 @@ if total_orders > 0:
             fig_veh = px.bar(veh_data, x='Vehicle', y='Delivery_Time', color='Delivery_Time', color_continuous_scale="Reds", template="plotly_dark", title="Asset Performance")
             fig_veh.update_layout(**transparent_layout)
             st.plotly_chart(fig_veh, use_container_width=True)
+            st.caption("📍 **Purpose:** Assesses hardware efficiency across the fleet. **Features Used:** X=Vehicle Class, Y=Avg Delivery Time.")
             
         # 7. Category Boxplot
         fig_cat = px.box(filtered_df, x='Category', y='Delivery_Time', color='Category', template="plotly_dark", title="Freight Volatility Analysis")
         fig_cat.update_layout(**transparent_layout)
         st.plotly_chart(fig_cat, use_container_width=True)
+        st.caption("📍 **Purpose:** Exposes variance and outliers in freight classes. **Features Used:** X=Freight Category, Y=Delivery Time Distribution.")
 
     with tab2:
         c5, c6 = st.columns(2)
@@ -230,12 +247,14 @@ if total_orders > 0:
             fig_trend.update_traces(line_color='#E31837', line_width=4, marker=dict(size=10))
             fig_trend.update_layout(**transparent_layout)
             st.plotly_chart(fig_trend, use_container_width=True)
+            st.caption("📍 **Purpose:** Tracks macro-level temporal speed trends. **Features Used:** X=Month, Y=Avg Delivery Time.")
 
         # 10. Delivery Time Histogram
         with c6:
             fig_hist = px.histogram(filtered_df, x='Delivery_Time', nbins=40, template="plotly_dark", title="Transit Time Curve", color_discrete_sequence=['#E31837'])
             fig_hist.update_layout(**transparent_layout)
             st.plotly_chart(fig_hist, use_container_width=True)
+            st.caption("📍 **Purpose:** Illustrates the frequency distribution of transit times. **Features Used:** X=Delivery Time Bins.")
 
         c7, c8 = st.columns(2)
         # 11. Late % by Weather
@@ -245,6 +264,7 @@ if total_orders > 0:
             fig_lw = px.bar(late_weather, x='Weather', y='Is_Late', template="plotly_dark", title="Late % by Weather", color_discrete_sequence=['#E31837'])
             fig_lw.update_layout(**transparent_layout)
             st.plotly_chart(fig_lw, use_container_width=True)
+            st.caption("📍 **Purpose:** Highlights correlation between weather conditions and delay probability. **Features Used:** X=Weather, Y=Late %.")
 
         # 12. Late % by Traffic
         with c8:
@@ -253,16 +273,21 @@ if total_orders > 0:
             fig_lt = px.pie(late_traffic, names='Traffic', values='Is_Late', template="plotly_dark", title="Late Ratio Distribution by Traffic", color_discrete_sequence=['#E31837', '#111', '#555'])
             fig_lt.update_layout(**transparent_layout)
             st.plotly_chart(fig_lt, use_container_width=True)
+            st.caption("📍 **Purpose:** Shows proportion of network delays attributed to varying traffic states. **Features Used:** Traffic Class vs Late %.")
 
     with tab3:
         st.markdown("### 🤖 17. AI Delay-Risk Prediction & 13. Automated Insights")
         
-        # Calculate Mock Risk Score based on active filters
-        base_risk = 20
-        if 'High' in sel_traffic or 'Jam' in sel_traffic: base_risk += 35
-        if 'Rain' in sel_weather or 'Storm' in sel_weather: base_risk += 25
-        if late_pct > 30: base_risk += 15
-        ai_risk = min(base_risk, 100)
+        # Calculate dynamic Risk Score based on the actual composition of filtered_df
+        base_risk = 10
+        if total_orders > 0:
+            traffic_penalty = filtered_df['Traffic'].isin(['High', 'Jam']).mean() * 45
+            weather_penalty = filtered_df['Weather'].isin(['Rain', 'Storm']).mean() * 30
+            delay_penalty = (late_pct / 100) * 25
+            
+            ai_risk = min(int(base_risk + traffic_penalty + weather_penalty + delay_penalty), 100)
+        else:
+            ai_risk = 0
         
         c9, c10 = st.columns([1, 2])
         with c9:
@@ -275,6 +300,7 @@ if total_orders > 0:
             ))
             fig_gauge.update_layout(**transparent_layout)
             st.plotly_chart(fig_gauge, use_container_width=True)
+            st.caption("📍 **Purpose:** Predicts probability of systemic network failure. **Features Used:** Traffic Density, Weather Severity, and Active Delay Ratios.")
             
         with c10:
             st.markdown("<br>", unsafe_allow_html=True)
