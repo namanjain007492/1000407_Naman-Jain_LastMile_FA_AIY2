@@ -88,6 +88,6 @@ The dashboard is divided into four main tabs, housing 12 distinct analytical eng
 
 **MENTOR:** Ms. Syed Ali Beema
 
-**SCHOOL NAME:** Jain Vidyalaya IB World School
+**SCHOOL NAME:** Jain Vidyalaya 
 
 **FRAMEWORK:** Streamlit | Plotly | Pandas | Custom CSS
