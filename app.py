@@ -276,7 +276,7 @@ if total_orders > 0:
             st.caption("📍 **Purpose:** Shows proportion of network delays attributed to varying traffic states. **Features Used:** Traffic Class vs Late %.")
 
     with tab3:
-        st.markdown("### 🤖 17. AI Delay-Risk Prediction & 13. Automated Insights")
+        st.markdown("### 🤖  AI Delay-Risk Prediction &  Automated Insights")
         
         # Calculate dynamic Risk Score based on the actual composition of filtered_df
         base_risk = 10
