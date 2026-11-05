@@ -83,7 +83,11 @@ The dashboard is divided into four main tabs, housing 12 distinct analytical eng
 ---
 
 **SYSTEM ARCHITECT:** Naman Jain 
+
 **REGISTRATION NUMBER:** 1000407
+
 **MENTOR:** Ms. Syed Ali Beema
+
 **SCHOOL NAME:** Jain Vidyalaya IB World School
+
 **FRAMEWORK:** Streamlit | Plotly | Pandas | Custom CSS
